@@ -7,7 +7,7 @@ vim.o.clipboard = "unnamedplus"
 vim.o.mouse = ""
 vim.o.tabstop = 4
 vim.opt.list = false
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 vim.opt.termguicolors = true
 vim.cmd("colorscheme catppuccin")
 vim.defer_fn(function()
@@ -38,6 +38,9 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
   end,
 })
+vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "NONE", underline = false })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#87CEEB", bold = true })
 
 vim.lsp.handlers["textDocument/inlayHint"] = function() end
 
