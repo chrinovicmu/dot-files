@@ -9,38 +9,13 @@ vim.o.tabstop = 4
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
-vim.cmd("colorscheme catppuccin")
+vim.cmd("colorscheme habamax")
 vim.defer_fn(function()
   vim.cmd([[hi Normal guibg = #000000]])
 end, 0)
-vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
 
--- Set the Catppuccin colorscheme
-vim.cmd("colorscheme catppuccin")
-
--- Set the global Normal group to have a black background
-vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-
--- Set NeoTree-specific highlight groups to have a black background
-vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "#000000" })
-vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = "#000000" })
-
--- Use an autocommand to enforce highlight settings for all windows
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = "*",
-  callback = function()
-    if vim.bo.filetype ~= "neo-tree" then
-      -- For non-NeoTree windows (e.g., the main editing area), use the global Normal group
-      vim.wo.winhighlight = "Normal:Normal"
-    else
-      -- For NeoTree windows, use NeoTree-specific highlight groups
-      vim.wo.winhighlight = "Normal:NeoTreeNormal,NormalNC:NeoTreeNormalNC"
-    end
-  end,
-})
-vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "NONE", underline = false })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#87CEEB", bold = true })
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "NONE", underline = false }) -- No line highlight
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#87CEEB", bold = true }) -- Light blue line number
 
 vim.lsp.handlers["textDocument/inlayHint"] = function() end
 
@@ -137,82 +112,27 @@ require("go").setup()
 require("lualine").setup({
   options = {
     theme = {
-      normal = {
-        a = { fg = "#ffffff", bg = "#000000" }, -- White on black
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
-      insert = {
-        a = { fg = "#ffffff", bg = "#000000" },
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
-      visual = {
-        a = { fg = "#ffffff", bg = "#000000" },
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
-      replace = {
-        a = { fg = "#ffffff", bg = "#000000" },
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
-      command = {
-        a = { fg = "#ffffff", bg = "#000000" },
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
-      inactive = {
-        a = { fg = "#ffffff", bg = "#000000" },
-        b = { fg = "#ffffff", bg = "#000000" },
-        c = { fg = "#ffffff", bg = "#000000" },
-        x = { fg = "#ffffff", bg = "#000000" },
-        y = { fg = "#ffffff", bg = "#000000" },
-        z = { fg = "#ffffff", bg = "#000000" },
-      },
+      normal = { c = { fg = "#ffffff", bg = "#000000" } },
+      insert = { c = { fg = "#ffffff", bg = "#000000" } }, -- Gray for insert mode
+      visual = { c = { fg = "#ffffff", bg = "#ADD8E6" } },
+      replace = { c = { fg = "#ffffff", bg = "#ff0000" } },
     },
   },
-  sections = {
-    -- Left side
-    lualine_a = { "mode" }, -- Current mode (e.g., NORMAL, INSERT)
-    lualine_b = { "branch" }, -- Git branch
-    lualine_c = { "filename" }, -- Current filename
-    -- Right side
-    lualine_x = {
-      {
-        "diff",
-        colored = true, -- Enable colored diff indicators
-        symbols = { -- Custom symbols (requires Nerd Font)
-          added = " ",
-          modified = " ",
-          removed = " ",
-        },
-        diff_color = { -- Colors for diff indicators
-          added = { fg = "#99ffff" }, -- Green for added
-          modified = { fg = "#99ffcc" }, -- Yellow for modified
-          removed = { fg = "#ff0000" }, -- Red for removed
-        },
-      },
-      "encoding", -- File encoding (e.g., utf-8)
-      "fileformat", -- File format (e.g., unix)
-      "filetype", -- File type (e.g., lua)
-    },
-    lualine_y = { "progress" }, -- Percentage through file
-    lualine_z = { "location" }, -- Line and column numbers
-  },
+})
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable",
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  -- Add plugins here
 })
