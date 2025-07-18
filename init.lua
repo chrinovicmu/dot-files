@@ -2,10 +2,13 @@
 require("config.lazy")
 
 vim.opt.guicursor = "n-v-c:block-,i-ci-ve:block-blockwait700-blinkoff400-blinkon250,r-cr:hor20,o:hor50"
-vim.o.clipboard = "unnamedplus"
-vim.o.clipboard = "unnamedplus"
-vim.o.mouse = ""
-vim.o.tabstop = 4
+vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
+vim.opt.mouse = ""
+vim.opt.expandtab = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
@@ -40,6 +43,16 @@ vim.api.nvim_create_autocmd("BufNewFile", {
     end
   end,
 })
+
+require("lspconfig").clangd.setup({
+  cmd = { "clangd", "--compile-commands-dir=/home/chrinovic/Tech/Linux_Device_Drivers/Drivers/IOCTL" },
+})
+
+-- Set in normal mode ('n'), map <leader>d to go to definition
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+
+-- Map <leader>D to go to declaration
+vim.keymap.set("n", "dg", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
 
 -- Autocommand for opening existing .c files (e.g., created by touch)
 vim.api.nvim_create_autocmd("BufRead", {
@@ -135,4 +148,13 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   -- Add plugins here
+})
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name == "clangd" then
+      client.server_capabilities.documentFormattingProvider = false
+    end
+  end,
 })
