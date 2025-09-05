@@ -1,5 +1,3 @@
---
-
 local group_styles = {
 
   ["Normal"] = { fg = "#CCCCCC", bg = "None" },

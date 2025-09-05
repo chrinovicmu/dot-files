@@ -22,6 +22,13 @@ vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#87CEEB", bold = true }) -- Light
 
 vim.lsp.handlers["textDocument/inlayHint"] = function() end
 
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.cu", "*.cuh" },
+  callback = function()
+    vim.bo.filetype = "cuda" -- clangd will now treat it as a CUDA file
+  end,
+})
+
 require("lazy").setup("plugins")
 require("lspconfig").bashls.setup({})
 -- Create a new autocommand group to avoid conflicts
@@ -122,6 +129,7 @@ require("go").setup()
 
 require("go").setup()
 
+--[[ 
 require("lualine").setup({
   options = {
     theme = {
@@ -131,7 +139,7 @@ require("lualine").setup({
       replace = { c = { fg = "#ffffff", bg = "#ff0000" } },
     },
   },
-})
+})]]
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -157,4 +165,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
       client.server_capabilities.documentFormattingProvider = false
     end
   end,
+})
+
+require("lspconfig").clangd.setup({
+  cmd = { "/home/chrinovic/llvm-build/bin/clangd", "--background-index" },
 })
