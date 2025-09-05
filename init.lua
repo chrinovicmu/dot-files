@@ -102,18 +102,6 @@ vim.opt.guicursor = "n-v-c:block,i-ci-ve:block-blinkwait700-blinkoff400-blinkon2
 
 vim.cmd("highlight Visual guibg=#0000FF guifg=NONE")
 
-require("lazy").setup({
-  {
-    "boganworld/crackboard.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function()
-      require("crackboard").setup({
-        session_key = "",
-      })
-    end,
-  },
-})
-
 --vim.cmd([[
 --  highlight Function guifg=#A9A9A9 ctermfg=2
 --]])
