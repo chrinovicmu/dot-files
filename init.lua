@@ -12,9 +12,21 @@ vim.opt.softtabstop = 4
 vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
-vim.cmd("colorscheme habamax")
+-- Load the habamax colorscheme first
+vim.cmd("colorscheme habamax.nvim")
+
+-- Defer the highlight overrides to ensure they apply AFTER the colorscheme loads
+-- vim.defer_fn schedules a function to run after a delay (0ms = next event loop)
+-- This ensures our custom highlights are applied AFTER habamax sets its defaults
 vim.defer_fn(function()
-  vim.cmd([[hi Normal guibg = #000000]])
+  -- Set Normal background to black
+  vim.cmd([[hi Normal guibg=#000000]])
+
+  -- Set StatusLine background to black (this is what you need!)
+  vim.cmd([[hi StatusLine guifg=#EEEEEE guibg=#000000]])
+
+  -- Also set StatusLineNC (non-current window) to black
+  vim.cmd([[hi StatusLineNC guifg=#EEEEEE guibg=#000000]])
 end, 0)
 
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "NONE", underline = false }) -- No line highlight
@@ -30,7 +42,6 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 
 require("lazy").setup("plugins")
-require("lspconfig").bashls.setup({})
 -- Create a new autocommand group to avoid conflicts
 local group = vim.api.nvim_create_augroup("CFileAutocommands", { clear = true })
 
@@ -51,9 +62,7 @@ vim.api.nvim_create_autocmd("BufNewFile", {
   end,
 })
 
-require("lspconfig").clangd.setup({
-  cmd = { "clangd", "--compile-commands-dir=/home/chrinovic/Tech/Linux_Device_Drivers/Drivers/IOCTL" },
-})
+--require("lspconfig").clangd.setup({})
 
 -- Set in normal mode ('n'), map <leader>d to go to definition
 vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
@@ -96,7 +105,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 vim.api.nvim_set_keymap("n", "<C-v>", '"+p', { noremap = true, silent = true })
-require("lazy").setup({ { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" } })
 
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:block-blinkwait700-blinkoff400-blinkon250"
 
