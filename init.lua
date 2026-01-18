@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 
@@ -13,14 +16,14 @@ vim.opt.list = false
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
 -- Load the habamax colorscheme first
-vim.cmd("colorscheme habamax.nvim")
+vim.cmd("colorscheme gruvbox")
 
 -- Defer the highlight overrides to ensure they apply AFTER the colorscheme loads
 -- vim.defer_fn schedules a function to run after a delay (0ms = next event loop)
 -- This ensures our custom highlights are applied AFTER habamax sets its defaults
 vim.defer_fn(function()
   -- Set Normal background to black
-  vim.cmd([[hi Normal guibg=#000000]])
+  --vim.cmd([[hi Normal guibg=#000000]])
 
   -- Set StatusLine background to black (this is what you need!)
   vim.cmd([[hi StatusLine guifg=#EEEEEE guibg=#000000]])

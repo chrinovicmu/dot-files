@@ -1,10 +1,22 @@
 return {
-  -- Gruvbox theme
+  -- Gruvbox (Lua, HARD contrast)
   {
-    "morhetz/gruvbox",
+    "ellisonleao/gruvbox.nvim",
     lazy = false,
     priority = 1000,
     config = function()
+      require("gruvbox").setup({
+        contrast = "hard",
+        italic = {
+          strings = false,
+          comments = true,
+          operators = false,
+          folds = true,
+        },
+        transparent_mode = false,
+      })
+
+      vim.o.background = "dark"
       vim.cmd.colorscheme("gruvbox")
     end,
   },
@@ -21,14 +33,14 @@ return {
     end,
   },
 
-  -- Habamax theme (lush-based)
+  -- Habamax
   {
     "ntk148v/habamax.nvim",
     dependencies = { "rktjmp/lush.nvim" },
     lazy = true,
   },
 
-  -- Kanagawa Paper theme
+  -- Kanagawa Paper
   {
     "thesimonho/kanagawa-paper.nvim",
     lazy = true,
@@ -36,9 +48,9 @@ return {
     opts = {},
   },
 
-  -- Theme toggle keybinding
+  -- Theme toggle
   {
-    "nvim-lua/plenary.nvim", -- included in LazyVim by default, but kept for safety
+    "nvim-lua/plenary.nvim",
     config = function()
       local themes = { "gruvbox", "vscode", "habamax", "kanagawa-paper" }
       local index = 1
@@ -48,9 +60,17 @@ return {
         if index > #themes then
           index = 1
         end
-        local theme = themes[index]
-        vim.cmd.colorscheme(theme)
-        print("Switched to " .. theme)
+
+        -- reconfigure gruvbox when switching back
+        if themes[index] == "gruvbox" then
+          require("gruvbox").setup({
+            contrast = "hard",
+          })
+          vim.o.background = "dark"
+        end
+
+        vim.cmd.colorscheme(themes[index])
+        print("Switched to " .. themes[index])
       end, { desc = "Toggle between installed colorschemes" })
     end,
   },

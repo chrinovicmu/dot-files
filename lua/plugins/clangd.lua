@@ -54,6 +54,7 @@ return {
 
           -- Callback function executed when clangd attaches to a buffer
           on_attach = function(client, bufnr)
+            vim.diagnostic.enable(false, { bufnr = bufnr })
             -- Set up buffer-local keymaps for LSP functions
             local opts = { buffer = bufnr, noremap = true, silent = true }
 
